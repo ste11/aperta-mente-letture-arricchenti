@@ -39,7 +39,7 @@ const MUST_READ_BOOKS: Book[] = [
     category: 'Psicologia Cognitiva',
     rating: 5,
     microReview: "Un'esplorazione fondamentale dei due sistemi che guidano il modo in cui pensiamo. Essenziale per comprendere i bias decisionali.",
-    imageSrc: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=book-cover-1'
+    imageSrc: 'https://static.wixstatic.com/media/86e416_89904ff627684b319d1313ff948c1dc1~mv2.png?originWidth=384&originHeight=256'
   },
   {
     id: 'mr-2',
@@ -48,7 +48,7 @@ const MUST_READ_BOOKS: Book[] = [
     category: 'Produttività',
     rating: 5,
     microReview: "In un mondo distratto, la capacità di concentrarsi senza distrazioni è un superpotere. Una guida pratica per l'eccellenza cognitiva.",
-    imageSrc: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=book-cover-2'
+    imageSrc: 'https://static.wixstatic.com/media/86e416_26af2e77350a48bb99b999b96156daeb~mv2.png?originWidth=384&originHeight=256'
   },
   {
     id: 'mr-3',
@@ -57,7 +57,7 @@ const MUST_READ_BOOKS: Book[] = [
     category: 'Crescita Personale',
     rating: 5,
     microReview: "Piccoli cambiamenti, risultati straordinari. Il manuale definitivo per costruire abitudini che durano e rompono schemi negativi.",
-    imageSrc: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=book-cover-3'
+    imageSrc: 'https://static.wixstatic.com/media/86e416_243bf1fb52c84a1280a6694f7bdebc2b~mv2.png?originWidth=384&originHeight=256'
   },
   {
     id: 'mr-4',
@@ -66,7 +66,7 @@ const MUST_READ_BOOKS: Book[] = [
     category: 'Strategia & Innovazione',
     rating: 5,
     microReview: "Note sulle startup e su come costruire il futuro. Una prospettiva contrarian sull'innovazione verticale.",
-    imageSrc: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=book-cover-4'
+    imageSrc: 'https://static.wixstatic.com/media/86e416_3c450ae1387647d8b3890d5edf195f3a~mv2.png?originWidth=384&originHeight=256'
   },
   {
     id: 'mr-5',
@@ -75,7 +75,7 @@ const MUST_READ_BOOKS: Book[] = [
     category: 'Filosofia & Rischio',
     rating: 5,
     microReview: "Le cose che guadagnano dal disordine. Un concetto vitale per navigare l'incertezza del mondo moderno.",
-    imageSrc: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=book-cover-5'
+    imageSrc: 'https://static.wixstatic.com/media/86e416_871a323f4d1b40b08a9b00612762d6c2~mv2.png?originWidth=384&originHeight=256'
   }
 ];
 
