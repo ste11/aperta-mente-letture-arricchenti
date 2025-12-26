@@ -27,6 +27,27 @@ export interface ThematicCategories {
 
 
 /**
+ * Collection ID: commenti
+ * Interface for Comments
+ */
+export interface Comments {
+  _id: string;
+  _createdDate?: Date;
+  _updatedDate?: Date;
+  /** @wixFieldType text */
+  visitorName?: string;
+  /** @wixFieldType text */
+  visitorEmail?: string;
+  /** @wixFieldType text */
+  commentText?: string;
+  /** @wixFieldType number */
+  rating?: number;
+  /** @wixFieldType datetime */
+  commentDate?: Date | string;
+}
+
+
+/**
  * Collection ID: libri
  * Interface for Books
  */
