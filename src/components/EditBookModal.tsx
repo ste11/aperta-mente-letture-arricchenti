@@ -17,7 +17,6 @@ interface EditBookModalProps {
 }
 
 export default function EditBookModal({ book, onClose, onBookUpdated }: EditBookModalProps) {
-  // Inizializziamo lo stato con i dati del libro passato come prop
   const [formData, setFormData] = useState({
     title: book.title || '',
     author: book.author || '',
@@ -25,8 +24,9 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
     category: book.category || '',
     microReview: book.microReview || '',
     synopsis: book.synopsis || '',
+    personalNotes: book.personalNotes || '', // Campo Note Personali dallo screenshot
     isMustRead: book.isMustRead || false,
-    coverImage: book.coverImage || '', // Recupera l'immagine esistente
+    coverImage: book.coverImage || '', // Immagine
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +70,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
         category: formData.category || undefined,
         microReview: formData.microReview || undefined,
         synopsis: formData.synopsis || undefined,
+        personalNotes: formData.personalNotes || undefined,
         isMustRead: formData.isMustRead,
         coverImage: formData.coverImage || undefined,
       };
@@ -86,7 +87,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-[#0b0e14] border border-white/10 overflow-y-auto max-h-[90vh] text-white">
+      <DialogContent className="max-w-2xl bg-[#1e293b] border border-white/10 overflow-y-auto max-h-[90vh] text-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-[#4fc3f7]">
             Modifica Libro
@@ -102,12 +103,11 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
 
         <form onSubmit={handleSubmit} className="space-y-6">
           
-          {/* SEZIONE IMMAGINE - POSIZIONATA IN ALTO PER ESSERE VISIBILE */}
-          <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+          {/* --- SEZIONE IMMAGINE (Aggiunta qui in alto) --- */}
+          <div className="bg-black/20 p-4 rounded-lg border border-white/10">
             <Label className="text-[#4fc3f7] font-semibold mb-3 block">Copertina Libro</Label>
             <div className="flex items-center gap-6">
-              {/* Box Anteprima */}
-              <div className="relative h-48 w-32 flex-shrink-0 bg-black/40 rounded-md border-2 border-dashed border-white/20 overflow-hidden group">
+              <div className="relative h-48 w-32 flex-shrink-0 bg-black/40 rounded-md border-2 border-dashed border-white/20 overflow-hidden">
                 {formData.coverImage ? (
                   <>
                     <img 
@@ -126,19 +126,18 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
                 ) : (
                   <div className="h-full w-full flex flex-col items-center justify-center text-white/40">
                     <ImageIcon className="w-8 h-8 mb-2" />
-                    <span className="text-[10px] uppercase">Nessuna foto</span>
+                    <span className="text-[10px] uppercase text-center px-2">Nessuna Immagine</span>
                   </div>
                 )}
               </div>
 
-              {/* Tasto Caricamento */}
               <div className="flex-1 space-y-3">
-                <p className="text-sm text-white/60">
-                  Carica una nuova immagine per sostituire quella attuale (Max 2MB).
+                <p className="text-sm text-white/60 italic">
+                  Carica una nuova immagine o sostituisci quella esistente.
                 </p>
-                <label className="inline-flex items-center gap-2 bg-[#4fc3f7] hover:bg-[#4fc3f7]/80 text-black px-4 py-2 rounded-md cursor-pointer font-bold transition-all shadow-lg">
+                <label className="inline-flex items-center gap-2 bg-[#4fc3f7] hover:bg-[#4fc3f7]/80 text-[#1e293b] px-4 py-2 rounded-md cursor-pointer font-bold transition-all shadow-lg text-sm">
                   <Upload className="w-4 h-4" />
-                  Scegli Immagine
+                  Carica Copertina
                   <input 
                     type="file" 
                     className="hidden" 
@@ -150,14 +149,14 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
             </div>
           </div>
 
-          {/* ALTRI CAMPI DEL FORM */}
+          {/* --- CAMPI DATI --- */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-white/80">Titolo *</Label>
               <Input
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="bg-black/40 border-white/20 focus:border-[#4fc3f7]"
+                className="bg-[#0f172a] border-white/10 text-white"
               />
             </div>
             <div className="space-y-2">
@@ -165,7 +164,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               <Input
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="bg-black/40 border-white/20 focus:border-[#4fc3f7]"
+                className="bg-[#0f172a] border-white/10 text-white"
               />
             </div>
           </div>
@@ -177,7 +176,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
                 type="number"
                 value={formData.yearRead}
                 onChange={(e) => setFormData({ ...formData, yearRead: parseInt(e.target.value) })}
-                className="bg-black/40 border-white/20"
+                className="bg-[#0f172a] border-white/10 text-white"
               />
             </div>
             <div className="space-y-2">
@@ -185,7 +184,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               <Input
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="bg-black/40 border-white/20"
+                className="bg-[#0f172a] border-white/10 text-white"
               />
             </div>
           </div>
@@ -195,7 +194,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
             <Textarea
               value={formData.microReview}
               onChange={(e) => setFormData({ ...formData, microReview: e.target.value })}
-              className="bg-black/40 border-white/20 min-h-[80px]"
+              className="bg-[#0f172a] border-white/10 text-white min-h-[80px]"
             />
           </div>
 
@@ -204,10 +203,20 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
             <Textarea
               value={formData.synopsis}
               onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-              className="bg-black/40 border-white/20 min-h-[120px]"
+              className="bg-[#0f172a] border-white/10 text-white min-h-[100px]"
             />
           </div>
 
+          <div className="space-y-2">
+            <Label className="text-white/80">Note Personali</Label>
+            <Textarea
+              value={formData.personalNotes}
+              onChange={(e) => setFormData({ ...formData, personalNotes: e.target.value })}
+              className="bg-[#0f172a] border-white/10 text-white min-h-[100px]"
+            />
+          </div>
+
+          {/* --- CHECKBOX MUST READ --- */}
           <div className="flex items-center space-x-3 bg-white/5 p-3 rounded-md border border-white/10">
             <Checkbox
               id="isMustRead"
@@ -219,11 +228,11 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
             </Label>
           </div>
 
-          <div className="flex gap-4 justify-end pt-6 border-t border-white/10">
-            <Button type="button" variant="outline" onClick={onClose} className="border-white/20 hover:bg-white/10">
+          <div className="flex gap-4 justify-end pt-6">
+            <Button type="button" variant="outline" onClick={onClose} className="border-white/20">
               Annulla
             </Button>
-            <Button type="submit" disabled={isLoading} className="bg-[#4fc3f7] hover:bg-[#4fc3f7]/80 text-black font-bold px-8">
+            <Button type="submit" disabled={isLoading} className="bg-[#4fc3f7] hover:bg-[#4fc3f7]/80 text-[#1e293b] font-bold">
               {isLoading ? 'Salvataggio...' : 'Salva Modifiche'}
             </Button>
           </div>
