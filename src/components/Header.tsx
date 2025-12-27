@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Sparkles, LogOut } from 'lucide-react';
+import { Sparkles, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui/button';
@@ -49,13 +49,8 @@ export default function Header() {
             >
               Libri
             </Link>
-            <Link
-              to="/libri#must-read"
-              className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-paragraph font-medium hover:bg-primary/90 transition-colors"
-            >
-              <BookOpen className="w-4 h-4" />
-              Must Read
-            </Link>
+
+            {/* Il pulsante Must Read è stato rimosso da qui per semplificare l'interfaccia */}
 
             {/* Owner Login/Dashboard */}
             {isOwnerLoggedIn ? (
