@@ -7,6 +7,7 @@ import { Books } from '@/entities';
 import { ArrowLeft, Star, Calendar, BookOpen } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import CommentsSection from '@/components/CommentsSection';
 
 export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -199,6 +200,13 @@ export default function BookDetailPage() {
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Comments Section */}
+      <section className="py-24 px-6 bg-primary/20 border-t border-secondary/20">
+        <div className="max-w-[100rem] mx-auto">
+          <CommentsSection bookId={id || ''} bookTitle={book.title || ''} />
         </div>
       </section>
 

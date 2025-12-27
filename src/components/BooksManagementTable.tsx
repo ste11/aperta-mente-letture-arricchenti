@@ -1,0 +1,363 @@
+import { useState } from 'react';
+import { BaseCrudService } from '@/integrations';
+import { Books } from '@/entities';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Trash2, Edit2, ChevronDown, ChevronUp } from 'lucide-react';
+
+interface BooksManagementTableProps {
+  books: Books[];
+  onBookDeleted: () => void;
+  onBooksUpdated: () => void;
+}
+
+export default function BooksManagementTable({
+  books,
+  onBookDeleted,
+  onBooksUpdated,
+}: BooksManagementTableProps) {
+  const [expandedBookId, setExpandedBookId] = useState<string | null>(null);
+  const [editingBook, setEditingBook] = useState<Books | null>(null);
+  const [bookToDelete, setBookToDelete] = useState<Books | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDeleteBook = async () => {
+    if (!bookToDelete) return;
+
+    try {
+      setIsLoading(true);
+      await BaseCrudService.delete('libri', bookToDelete._id);
+      setBookToDelete(null);
+      onBookDeleted();
+    } catch (error) {
+      console.error('Error deleting book:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateBook = async () => {
+    if (!editingBook) return;
+
+    try {
+      setIsLoading(true);
+      await BaseCrudService.update('libri', {
+        _id: editingBook._id,
+        title: editingBook.title,
+        author: editingBook.author,
+        yearRead: editingBook.yearRead,
+        category: editingBook.category,
+        microReview: editingBook.microReview,
+        synopsis: editingBook.synopsis,
+        isMustRead: editingBook.isMustRead,
+        personalNotes: editingBook.personalNotes,
+        quotes: editingBook.quotes,
+        excerpts: editingBook.excerpts,
+      });
+      setEditingBook(null);
+      onBooksUpdated();
+    } catch (error) {
+      console.error('Error updating book:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const groupedBooks = books.reduce(
+    (acc, book) => {
+      const year = book.yearRead || 'Senza anno';
+      if (!acc[year]) acc[year] = [];
+      acc[year].push(book);
+      return acc;
+    },
+    {} as Record<string | number, Books[]>
+  );
+
+  const sortedYears = Object.keys(groupedBooks).sort((a, b) => {
+    const aNum = parseInt(String(a));
+    const bNum = parseInt(String(b));
+    return bNum - aNum;
+  });
+
+  return (
+    <div className="space-y-4">
+      {sortedYears.map((year) => (
+        <div key={year} className="space-y-2">
+          <h3 className="text-lg font-heading font-bold text-foreground">
+            Anno {year} ({groupedBooks[year].length} libri)
+          </h3>
+
+          <div className="space-y-2">
+            {groupedBooks[year].map((book) => (
+              <Card
+                key={book._id}
+                className="p-4 bg-primary/50 border-secondary/20 hover:border-secondary/40 transition"
+              >
+                <div
+                  className="flex justify-between items-start cursor-pointer"
+                  onClick={() =>
+                    setExpandedBookId(
+                      expandedBookId === book._id ? null : book._id
+                    )
+                  }
+                >
+                  <div className="flex-1">
+                    <h4 className="font-heading font-bold text-foreground">
+                      {book.title}
+                    </h4>
+                    <p className="text-secondary font-paragraph text-sm">
+                      {book.author}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingBook(book);
+                      }}
+                      className="text-light-blue hover:text-light-blue hover:bg-secondary/20"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setBookToDelete(book);
+                      }}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+
+                    {expandedBookId === book._id ? (
+                      <ChevronUp className="w-4 h-4 text-secondary" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-secondary" />
+                    )}
+                  </div>
+                </div>
+
+                {expandedBookId === book._id && (
+                  <div className="mt-4 pt-4 border-t border-secondary/20 space-y-2">
+                    {book.category && (
+                      <p className="text-sm font-paragraph">
+                        <span className="font-bold text-secondary">Categoria:</span>{' '}
+                        {book.category}
+                      </p>
+                    )}
+                    {book.microReview && (
+                      <p className="text-sm font-paragraph">
+                        <span className="font-bold text-secondary">Recensione:</span>{' '}
+                        {book.microReview}
+                      </p>
+                    )}
+                    {book.synopsis && (
+                      <p className="text-sm font-paragraph">
+                        <span className="font-bold text-secondary">Sinossi:</span>{' '}
+                        {book.synopsis}
+                      </p>
+                    )}
+                    {book.personalNotes && (
+                      <p className="text-sm font-paragraph">
+                        <span className="font-bold text-secondary">Note Personali:</span>{' '}
+                        {book.personalNotes}
+                      </p>
+                    )}
+                    <p className="text-sm font-paragraph">
+                      <span className="font-bold text-secondary">Must Read:</span>{' '}
+                      {book.isMustRead ? 'Sì' : 'No'}
+                    </p>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* Edit Dialog */}
+      {editingBook && (
+        <Dialog open={!!editingBook} onOpenChange={() => setEditingBook(null)}>
+          <DialogContent className="max-w-2xl bg-white">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-heading font-bold text-brand-color">
+                Modifica Libro
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                    Titolo
+                  </label>
+                  <Input
+                    value={editingBook.title || ''}
+                    onChange={(e) =>
+                      setEditingBook({ ...editingBook, title: e.target.value })
+                    }
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                    Autore
+                  </label>
+                  <Input
+                    value={editingBook.author || ''}
+                    onChange={(e) =>
+                      setEditingBook({ ...editingBook, author: e.target.value })
+                    }
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                    Anno Letto
+                  </label>
+                  <Input
+                    type="number"
+                    value={editingBook.yearRead || ''}
+                    onChange={(e) =>
+                      setEditingBook({
+                        ...editingBook,
+                        yearRead: parseInt(e.target.value),
+                      })
+                    }
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                    Categoria
+                  </label>
+                  <Input
+                    value={editingBook.category || ''}
+                    onChange={(e) =>
+                      setEditingBook({ ...editingBook, category: e.target.value })
+                    }
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  Micro Recensione
+                </label>
+                <Textarea
+                  value={editingBook.microReview || ''}
+                  onChange={(e) =>
+                    setEditingBook({
+                      ...editingBook,
+                      microReview: e.target.value,
+                    })
+                  }
+                  disabled={isLoading}
+                  rows={2}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  Sinossi
+                </label>
+                <Textarea
+                  value={editingBook.synopsis || ''}
+                  onChange={(e) =>
+                    setEditingBook({ ...editingBook, synopsis: e.target.value })
+                  }
+                  disabled={isLoading}
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  Note Personali
+                </label>
+                <Textarea
+                  value={editingBook.personalNotes || ''}
+                  onChange={(e) =>
+                    setEditingBook({
+                      ...editingBook,
+                      personalNotes: e.target.value,
+                    })
+                  }
+                  disabled={isLoading}
+                  rows={2}
+                />
+              </div>
+
+              <div className="flex gap-3 justify-end pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingBook(null)}
+                  disabled={isLoading}
+                >
+                  Annulla
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleUpdateBook}
+                  disabled={isLoading}
+                  className="bg-brand-color hover:bg-brand-color/90 text-white"
+                >
+                  {isLoading ? 'Salvataggio...' : 'Salva Modifiche'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {bookToDelete && (
+        <AlertDialog open={!!bookToDelete} onOpenChange={() => setBookToDelete(null)}>
+          <AlertDialogContent className="bg-white">
+            <AlertDialogTitle className="font-heading font-bold text-brand-color">
+              Elimina Libro
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-paragraph text-foreground">
+              Sei sicuro di voler eliminare "{bookToDelete.title}" di{' '}
+              {bookToDelete.author}? Questa azione non può essere annullata.
+            </AlertDialogDescription>
+            <div className="flex gap-3 justify-end">
+              <AlertDialogCancel disabled={isLoading}>Annulla</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteBook}
+                disabled={isLoading}
+                className="bg-destructive hover:bg-destructive/90 text-white"
+              >
+                {isLoading ? 'Eliminazione...' : 'Elimina'}
+              </AlertDialogAction>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </div>
+  );
+}

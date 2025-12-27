@@ -1,9 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Sparkles } from 'lucide-react';
+import { BookOpen, Sparkles, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuthStore } from '@/stores/authStore';
+import { Button } from '@/components/ui/button';
 
 export default function Header() {
   const location = useLocation();
+  const { isOwnerLoggedIn, logout } = useAuthStore();
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -53,6 +56,34 @@ export default function Header() {
               <BookOpen className="w-4 h-4" />
               Must Read
             </Link>
+
+            {/* Owner Login/Dashboard */}
+            {isOwnerLoggedIn ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/owner/dashboard"
+                  className="px-4 py-2 text-light-blue hover:text-light-blue/80 font-paragraph text-sm transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <Button
+                  onClick={logout}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Esci
+                </Button>
+              </div>
+            ) : (
+              <Link
+                to="/owner/login"
+                className="px-4 py-2 text-secondary hover:text-foreground font-paragraph text-sm transition-colors"
+              >
+                Accesso Proprietario
+              </Link>
+            )}
           </div>
         </nav>
       </div>

@@ -5,6 +5,9 @@ import ErrorPage from '@/integrations/errorHandlers/ErrorPage';
 import HomePage from '@/components/pages/HomePage';
 import LibriPage from '@/components/pages/LibriPage';
 import BookDetailPage from '@/components/pages/BookDetailPage';
+import OwnerLoginPage from '@/components/pages/OwnerLoginPage';
+import OwnerDashboardPage from '@/components/pages/OwnerDashboardPage';
+import SeedBooksPage from '@/components/pages/SeedBooksPage';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -33,6 +36,18 @@ const router = createBrowserRouter([
       {
         path: "libro/:id",
         element: <BookDetailPage />,
+      },
+      {
+        path: "owner/login",
+        element: <OwnerLoginPage />,
+      },
+      {
+        path: "owner/dashboard",
+        element: <OwnerDashboardPage />,
+      },
+      {
+        path: "seed-books",
+        element: <SeedBooksPage />,
       },
       {
         path: "*",
