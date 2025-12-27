@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BaseCrudService } from '@/integrations';
 import { Books } from '@/entities';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ interface EditBookModalProps {
 }
 
 export default function EditBookModal({ book, onClose, onBookUpdated }: EditBookModalProps) {
-  // Usiamo 'coverUrl' come nome standard per coerenza con l'AddBookModal
+  // Usiamo coverImage coerentemente con il tuo database
   const [formData, setFormData] = useState({
     title: book.title || '',
     author: book.author || '',
@@ -26,31 +26,29 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
     microReview: book.microReview || '',
     synopsis: book.synopsis || '',
     isMustRead: book.isMustRead || false,
-    coverUrl: book.coverUrl || '', // Qui leggiamo il valore esistente dal database
+    coverImage: book.coverImage || '', // Carica l'immagine esistente
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Funzione per gestire il caricamento della nuova immagine
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1.5 * 1024 * 1024) { // Limite cautelativo 1.5MB per Base64
-        setError('L\'immagine è troppo grande. Massimo 1.5MB.');
+      if (file.size > 2 * 1024 * 1024) {
+        setError('Immagine troppo grande (max 2MB)');
         return;
       }
-
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData({ ...formData, coverUrl: reader.result as string });
+        setFormData({ ...formData, coverImage: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const removeImage = () => {
-    setFormData({ ...formData, coverUrl: '' });
+    setFormData({ ...formData, coverImage: '' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,8 +63,9 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
     try {
       setIsLoading(true);
       
-      // Costruiamo l'oggetto aggiornato assicurandoci che i nomi dei campi siano corretti
-      const updatedBook: Partial<Books> = {
+      // Prepariamo l'oggetto con coverImage
+      const updatedBook: Books = {
+        ...book, // Mantiene l'_id originale e altri campi
         title: formData.title,
         author: formData.author,
         yearRead: formData.yearRead,
@@ -74,16 +73,15 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
         microReview: formData.microReview || undefined,
         synopsis: formData.synopsis || undefined,
         isMustRead: formData.isMustRead,
-        coverUrl: formData.coverUrl || undefined, // Deve coincidere con il nome nel DB
+        coverImage: formData.coverImage || undefined,
       };
 
-      // Nota: Passiamo l'ID separatamente se il tuo BaseCrudService lo richiede, 
-      // altrimenti passiamo l'intero oggetto. Qui usiamo la forma standard:
-      await BaseCrudService.update('libri', book._id, updatedBook);
+      // Chiamata di update (usiamo l'oggetto completo che contiene l'_id)
+      await BaseCrudService.update('libri', updatedBook);
       
       onBookUpdated();
     } catch (err) {
-      setError('Errore durante l\'aggiornamento del libro');
+      setError('Errore durante l\'aggiornamento');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -107,46 +105,40 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Sezione Caricamento/Modifica Immagine */}
+          {/* SEZIONE IMMAGINE COPERTINA */}
           <div className="space-y-2">
             <Label className="font-paragraph font-medium text-light-blue block">
               Copertina Libro
             </Label>
             <div className="flex items-start gap-4">
               <div className="relative group">
-                {formData.coverUrl ? (
-                  <div className="relative h-48 w-32 overflow-hidden rounded-md border border-secondary/40 shadow-lg">
-                    {/* Usiamo <img> standard invece di <Image /> per maggiore compatibilità Base64 */}
+                {formData.coverImage ? (
+                  <div className="relative h-48 w-32 overflow-hidden rounded-md border border-secondary/40 shadow-xl">
+                    {/* L'uso di img nativo assicura che il base64 venga letto correttamente */}
                     <img 
-                      src={formData.coverUrl} 
-                      alt="Anteprima copertina" 
+                      src={formData.coverImage} 
+                      alt="Copertina" 
                       className="h-full w-full object-cover"
                     />
                     <button
                       type="button"
                       onClick={removeImage}
-                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1.5 shadow-md hover:bg-red-700 transition-colors"
+                      className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3 h-3" />
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center h-48 w-32 border-2 border-dashed border-secondary/40 rounded-md cursor-pointer hover:border-brand-color transition-colors bg-background/50">
-                    <Upload className="w-8 h-8 text-secondary/60" />
-                    <span className="text-xs text-secondary/60 mt-2 text-center px-2">Cambia immagine</span>
-                    <input 
-                      type="file" 
-                      className="hidden" 
-                      accept="image/*" 
-                      onChange={handleImageChange} 
-                    />
+                  <label className="flex flex-col items-center justify-center h-48 w-32 border-2 border-dashed border-secondary/40 rounded-md cursor-pointer hover:border-brand-color transition-colors bg-background">
+                    <Upload className="w-6 h-6 text-secondary/60" />
+                    <span className="text-[10px] text-secondary/60 mt-2 text-center">Carica foto</span>
+                    <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                   </label>
                 )}
               </div>
-              <div className="text-xs text-secondary/70 pt-2 space-y-1">
-                <p>• Trascina un file o clicca per caricarlo.</p>
-                <p>• L'immagine verrà salvata automaticamente nel database.</p>
-                <p>• Max 1.5MB.</p>
+              <div className="text-xs text-secondary/60 self-center">
+                <p>Clicca sulla copertina per cambiarla.</p>
+                <p>Verrà salvata direttamente nel database.</p>
               </div>
             </div>
           </div>
@@ -157,7 +149,6 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               <Input
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                disabled={isLoading}
                 className="bg-background border-secondary/40"
               />
             </div>
@@ -166,7 +157,6 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               <Input
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                disabled={isLoading}
                 className="bg-background border-secondary/40"
               />
             </div>
@@ -179,7 +169,6 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
                 type="number"
                 value={formData.yearRead}
                 onChange={(e) => setFormData({ ...formData, yearRead: parseInt(e.target.value) })}
-                disabled={isLoading}
                 className="bg-background border-secondary/40"
               />
             </div>
@@ -188,7 +177,6 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               <Input
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                disabled={isLoading}
                 className="bg-background border-secondary/40"
               />
             </div>
@@ -200,7 +188,6 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               value={formData.microReview}
               onChange={(e) => setFormData({ ...formData, microReview: e.target.value })}
               rows={2}
-              disabled={isLoading}
               className="bg-background border-secondary/40"
             />
           </div>
@@ -211,24 +198,22 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
               value={formData.synopsis}
               onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
               rows={3}
-              disabled={isLoading}
               className="bg-background border-secondary/40"
             />
           </div>
 
-          <div className="flex items-center space-x-2 pt-2">
+          <div className="flex items-center space-x-2">
             <Checkbox
               id="isMustRead"
               checked={formData.isMustRead}
               onCheckedChange={(checked) => setFormData({ ...formData, isMustRead: checked as boolean })}
-              disabled={isLoading}
             />
-            <Label htmlFor="isMustRead" className="text-light-blue cursor-pointer font-medium">
+            <Label htmlFor="isMustRead" className="text-light-blue cursor-pointer">
               Libro consigliato (Must Read)
             </Label>
           </div>
 
-          <div className="flex gap-3 justify-end pt-6">
+          <div className="flex gap-3 justify-end pt-4">
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Annulla
             </Button>
