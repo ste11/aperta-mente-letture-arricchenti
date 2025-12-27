@@ -120,7 +120,6 @@ export default function OwnerDashboardPage() {
             <BooksManagementTable
               books={books}
               onBookDeleted={loadData}
-              onEditClick={handleEditClick} // Passiamo la funzione di edit
               onBooksUpdated={loadData}
             />
           </TabsContent>

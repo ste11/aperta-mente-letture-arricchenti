@@ -7,25 +7,26 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { AlertCircle, Upload, X } from 'lucide-react'; // Aggiunte icone
+import { AlertCircle, Upload, X } from 'lucide-react';
 import { Alert } from '@/components/ui/alert';
 import { Image } from '@/components/ui/image';
 
-interface AddBookModalProps {
+interface EditBookModalProps {
+  book: Books;
   onClose: () => void;
-  onBookAdded: () => void;
+  onBookUpdated: () => void;
 }
 
-export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps) {
+export default function EditBookModal({ book, onClose, onBookUpdated }: EditBookModalProps) {
   const [formData, setFormData] = useState({
-    title: '',
-    author: '',
-    yearRead: new Date().getFullYear(),
-    category: '',
-    microReview: '',
-    synopsis: '',
-    isMustRead: false,
-    coverImage: '', // Campo per l'immagine in Base64
+    title: book.title || '',
+    author: book.author || '',
+    yearRead: book.yearRead || new Date().getFullYear(),
+    category: book.category || '',
+    microReview: book.microReview || '',
+    synopsis: book.synopsis || '',
+    isMustRead: book.isMustRead || false,
+    coverUrl: book.coverImage || '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -41,14 +42,14 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData({ ...formData, coverImage: reader.result as string });
+        setFormData({ ...formData, coverUrl: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const removeImage = () => {
-    setFormData({ ...formData, coverImage: '' });
+    setFormData({ ...formData, coverUrl: '' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,8 +63,8 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
 
     try {
       setIsLoading(true);
-      const newBook: Books = {
-        _id: crypto.randomUUID(),
+      const updatedBook: Books = {
+        _id: book._id,
         title: formData.title,
         author: formData.author,
         yearRead: formData.yearRead,
@@ -71,13 +72,13 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
         microReview: formData.microReview || undefined,
         synopsis: formData.synopsis || undefined,
         isMustRead: formData.isMustRead,
-        coverImage: formData.coverImage || undefined, // Salvataggio dell'immagine
+        coverImage: formData.coverUrl || undefined,
       };
 
-      await BaseCrudService.create('libri', newBook);
-      onBookAdded();
+      await BaseCrudService.update('libri', updatedBook);
+      onBookUpdated();
     } catch (err) {
-      setError('Errore durante l\'aggiunta del libro');
+      setError('Errore durante l\'aggiornamento del libro');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -89,7 +90,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
       <DialogContent className="max-w-2xl bg-primary border border-secondary/30 overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-heading font-bold text-light-blue">
-            Aggiungi Nuovo Libro
+            Modifica Libro
           </DialogTitle>
         </DialogHeader>
 
@@ -108,9 +109,9 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
             </Label>
             <div className="flex items-start gap-4">
               <div className="relative group">
-                {formData.coverImage ? (
+                {formData.coverUrl ? (
                   <div className="relative h-40 w-28 overflow-hidden rounded-md border border-secondary/40">
-                    <Image src={formData.coverImage} alt="Preview" className="h-full w-full object-cover" />
+                    <Image src={formData.coverUrl} alt="Preview" className="h-full w-full object-cover" />
                     <button
                       type="button"
                       onClick={removeImage}
@@ -266,7 +267,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
               disabled={isLoading}
               className="bg-brand-color hover:bg-brand-color/90 text-white"
             >
-              {isLoading ? 'Aggiunta in corso...' : 'Aggiungi Libro'}
+              {isLoading ? 'Aggiornamento in corso...' : 'Aggiorna Libro'}
             </Button>
           </div>
         </form>
