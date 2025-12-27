@@ -128,15 +128,7 @@ export default function OwnerLoginPage() {
           </Button>
         </form>
 
-        <div className="mt-6 p-4 bg-background border border-light-blue/40 rounded-lg">
-          <p className="text-xs font-paragraph text-light-blue">
-            <strong className="text-light-blue">Credenziali Proprietario:</strong><br />
-            <span className="text-secondary">Email: stefano.ricci11@gmail.com</span><br />
-            <span className="text-secondary">Password: Library2025top!</span>
-          </p>
-        </div>
-
-        <div className="mt-4 p-3 bg-background border border-secondary/40 rounded-lg">
+        <div className="mt-6 p-3 bg-background border border-secondary/40 rounded-lg">
           <p className="text-xs font-paragraph text-secondary">
             <strong className="text-light-blue">Protezione Sicurezza:</strong><br />
             <span>Massimo 5 tentativi ogni 15 minuti. Dopo 5 tentativi falliti, l'account sarà bloccato per 15 minuti.</span>
