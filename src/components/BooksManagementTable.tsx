@@ -195,9 +195,9 @@ export default function BooksManagementTable({
       {/* Edit Dialog */}
       {editingBook && (
         <Dialog open={!!editingBook} onOpenChange={() => setEditingBook(null)}>
-          <DialogContent className="max-w-2xl bg-white">
+          <DialogContent className="max-w-2xl bg-primary border border-secondary/30">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-heading font-bold text-brand-color">
+              <DialogTitle className="text-2xl font-heading font-bold text-light-blue">
                 Modifica Libro
               </DialogTitle>
             </DialogHeader>
@@ -205,7 +205,7 @@ export default function BooksManagementTable({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                     Titolo
                   </label>
                   <Input
@@ -214,11 +214,12 @@ export default function BooksManagementTable({
                       setEditingBook({ ...editingBook, title: e.target.value })
                     }
                     disabled={isLoading}
+                    className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                     Autore
                   </label>
                   <Input
@@ -227,13 +228,14 @@ export default function BooksManagementTable({
                       setEditingBook({ ...editingBook, author: e.target.value })
                     }
                     disabled={isLoading}
+                    className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                     Anno Letto
                   </label>
                   <Input
@@ -246,11 +248,12 @@ export default function BooksManagementTable({
                       })
                     }
                     disabled={isLoading}
+                    className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                  <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                     Categoria
                   </label>
                   <Input
@@ -259,12 +262,13 @@ export default function BooksManagementTable({
                       setEditingBook({ ...editingBook, category: e.target.value })
                     }
                     disabled={isLoading}
+                    className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                   Micro Recensione
                 </label>
                 <Textarea
@@ -277,11 +281,12 @@ export default function BooksManagementTable({
                   }
                   disabled={isLoading}
                   rows={2}
+                  className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                   Sinossi
                 </label>
                 <Textarea
@@ -291,11 +296,12 @@ export default function BooksManagementTable({
                   }
                   disabled={isLoading}
                   rows={3}
+                  className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+                <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
                   Note Personali
                 </label>
                 <Textarea
@@ -308,6 +314,7 @@ export default function BooksManagementTable({
                   }
                   disabled={isLoading}
                   rows={2}
+                  className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
                 />
               </div>
 
@@ -337,11 +344,11 @@ export default function BooksManagementTable({
       {/* Delete Confirmation Dialog */}
       {bookToDelete && (
         <AlertDialog open={!!bookToDelete} onOpenChange={() => setBookToDelete(null)}>
-          <AlertDialogContent className="bg-white">
-            <AlertDialogTitle className="font-heading font-bold text-brand-color">
+          <AlertDialogContent className="bg-primary border border-secondary/30">
+            <AlertDialogTitle className="font-heading font-bold text-light-blue">
               Elimina Libro
             </AlertDialogTitle>
-            <AlertDialogDescription className="font-paragraph text-foreground">
+            <AlertDialogDescription className="font-paragraph text-secondary">
               Sei sicuro di voler eliminare "{bookToDelete.title}" di{' '}
               {bookToDelete.author}? Questa azione non può essere annullata.
             </AlertDialogDescription>

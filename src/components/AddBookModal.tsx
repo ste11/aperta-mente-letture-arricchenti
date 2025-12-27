@@ -62,9 +62,9 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-white">
+      <DialogContent className="max-w-2xl bg-primary border border-secondary/30">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-heading font-bold text-brand-color">
+          <DialogTitle className="text-2xl font-heading font-bold text-light-blue">
             Aggiungi Nuovo Libro
           </DialogTitle>
         </DialogHeader>
@@ -79,7 +79,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="font-paragraph font-medium text-foreground">
+              <Label className="font-paragraph font-medium text-light-blue block mb-2">
                 Titolo *
               </Label>
               <Input
@@ -89,11 +89,12 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 }
                 placeholder="Titolo del libro"
                 disabled={isLoading}
+                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
               />
             </div>
 
             <div>
-              <Label className="font-paragraph font-medium text-foreground">
+              <Label className="font-paragraph font-medium text-light-blue block mb-2">
                 Autore *
               </Label>
               <Input
@@ -103,13 +104,14 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 }
                 placeholder="Nome dell'autore"
                 disabled={isLoading}
+                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="font-paragraph font-medium text-foreground">
+              <Label className="font-paragraph font-medium text-light-blue block mb-2">
                 Anno Letto
               </Label>
               <Input
@@ -120,11 +122,12 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 }
                 placeholder="Anno"
                 disabled={isLoading}
+                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
               />
             </div>
 
             <div>
-              <Label className="font-paragraph font-medium text-foreground">
+              <Label className="font-paragraph font-medium text-light-blue block mb-2">
                 Categoria
               </Label>
               <Input
@@ -134,12 +137,13 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 }
                 placeholder="Categoria"
                 disabled={isLoading}
+                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
               />
             </div>
           </div>
 
           <div>
-            <Label className="font-paragraph font-medium text-foreground">
+            <Label className="font-paragraph font-medium text-light-blue block mb-2">
               Micro Recensione
             </Label>
             <Textarea
@@ -150,11 +154,12 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
               placeholder="Una breve recensione del libro"
               disabled={isLoading}
               rows={2}
+              className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
             />
           </div>
 
           <div>
-            <Label className="font-paragraph font-medium text-foreground">
+            <Label className="font-paragraph font-medium text-light-blue block mb-2">
               Sinossi
             </Label>
             <Textarea
@@ -165,6 +170,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
               placeholder="Descrizione completa del libro"
               disabled={isLoading}
               rows={3}
+              className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
             />
           </div>
 
@@ -179,7 +185,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
             />
             <Label
               htmlFor="isMustRead"
-              className="font-paragraph font-medium text-foreground cursor-pointer"
+              className="font-paragraph font-medium text-light-blue cursor-pointer"
             >
               Libro consigliato (Must Read)
             </Label>

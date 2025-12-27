@@ -36,9 +36,9 @@ export default function OwnerLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-primary flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 bg-white shadow-lg">
+      <Card className="w-full max-w-md p-8 bg-primary border border-secondary/30 shadow-lg">
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-brand-color mb-2">
+          <h1 className="text-3xl font-heading font-bold text-light-blue mb-2">
             Accesso Proprietario
           </h1>
           <p className="text-secondary font-paragraph">
@@ -55,7 +55,7 @@ export default function OwnerLoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+            <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
               Email
             </label>
             <Input
@@ -64,12 +64,12 @@ export default function OwnerLoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Inserisci la tua email"
               disabled={isLoading}
-              className="w-full"
+              className="w-full bg-background border-secondary/40 text-foreground placeholder-secondary/60"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-paragraph font-medium text-foreground mb-2">
+            <label className="block text-sm font-paragraph font-medium text-light-blue mb-2">
               Password
             </label>
             <Input
@@ -78,7 +78,7 @@ export default function OwnerLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Inserisci la tua password"
               disabled={isLoading}
-              className="w-full"
+              className="w-full bg-background border-secondary/40 text-foreground placeholder-secondary/60"
             />
           </div>
 
@@ -91,11 +91,11 @@ export default function OwnerLoginPage() {
           </Button>
         </form>
 
-        <div className="mt-6 p-4 bg-light-blue/20 rounded-lg border border-light-blue">
-          <p className="text-xs font-paragraph text-secondary">
-            <strong>Demo Credentials:</strong><br />
-            Email: owner@library.com<br />
-            Password: LibraryOwner2025!
+        <div className="mt-6 p-4 bg-background border border-light-blue/40 rounded-lg">
+          <p className="text-xs font-paragraph text-light-blue">
+            <strong className="text-light-blue">Demo Credentials:</strong><br />
+            <span className="text-secondary">Email: owner@library.com</span><br />
+            <span className="text-secondary">Password: LibraryOwner2025!</span>
           </p>
         </div>
       </Card>

@@ -111,11 +111,11 @@ export default function CommentsManagementTable({
       {/* Delete Confirmation Dialog */}
       {commentToDelete && (
         <AlertDialog open={!!commentToDelete} onOpenChange={() => setCommentToDelete(null)}>
-          <AlertDialogContent className="bg-white">
-            <AlertDialogTitle className="font-heading font-bold text-brand-color">
+          <AlertDialogContent className="bg-primary border border-secondary/30">
+            <AlertDialogTitle className="font-heading font-bold text-light-blue">
               Elimina Commento
             </AlertDialogTitle>
-            <AlertDialogDescription className="font-paragraph text-foreground">
+            <AlertDialogDescription className="font-paragraph text-secondary">
               Sei sicuro di voler eliminare il commento di{' '}
               {commentToDelete.visitorName || 'questo visitatore'}? Questa azione non può
               essere annullata.
