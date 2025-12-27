@@ -56,6 +56,12 @@ export interface Books {
   _createdDate?: Date;
   _updatedDate?: Date;
   /** @wixFieldType text */
+  personalNotes?: string;
+  /** @wixFieldType text */
+  quotes?: string;
+  /** @wixFieldType text */
+  excerpts?: string;
+  /** @wixFieldType text */
   title?: string;
   /** @wixFieldType text */
   author?: string;
