@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Upload, X } from 'lucide-react'; // Aggiunte icone
 import { Alert } from '@/components/ui/alert';
 
 interface AddBookModalProps {
@@ -24,9 +24,31 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
     microReview: '',
     synopsis: '',
     isMustRead: false,
+    coverUrl: '', // Campo per l'immagine in Base64
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Funzione per gestire il caricamento dell'immagine
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // Limite opzionale di 2MB
+        setError('L\'immagine è troppo grande. Massimo 2MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, coverUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setFormData({ ...formData, coverUrl: '' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +70,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
         microReview: formData.microReview || undefined,
         synopsis: formData.synopsis || undefined,
         isMustRead: formData.isMustRead,
+        coverUrl: formData.coverUrl || undefined, // Salvataggio dell'immagine
       };
 
       await BaseCrudService.create('libri', newBook);
@@ -62,7 +85,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-primary border border-secondary/30">
+      <DialogContent className="max-w-2xl bg-primary border border-secondary/30 overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-heading font-bold text-light-blue">
             Aggiungi Nuovo Libro
@@ -77,6 +100,48 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Sezione Caricamento Immagine */}
+          <div className="space-y-2">
+            <Label className="font-paragraph font-medium text-light-blue block">
+              Copertina Libro
+            </Label>
+            <div className="flex items-start gap-4">
+              <div className="relative group">
+                {formData.coverUrl ? (
+                  <div className="relative h-40 w-28 overflow-hidden rounded-md border border-secondary/40">
+                    <img 
+                      src={formData.coverUrl} 
+                      alt="Preview" 
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center h-40 w-28 border-2 border-dashed border-secondary/40 rounded-md cursor-pointer hover:border-brand-color transition-colors bg-background">
+                    <Upload className="w-6 h-6 text-secondary/60" />
+                    <span className="text-[10px] text-secondary/60 mt-2 text-center px-1">Carica copertina</span>
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={handleImageChange} 
+                    />
+                  </label>
+                )}
+              </div>
+              <div className="text-xs text-secondary/70 self-center">
+                <p>Formati supportati: JPG, PNG, WebP.</p>
+                <p>Dimensione massima consigliata: 1MB.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label className="font-paragraph font-medium text-light-blue block mb-2">
@@ -89,7 +154,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 }
                 placeholder="Titolo del libro"
                 disabled={isLoading}
-                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
+                className="bg-background border-secondary/40 text-foreground"
               />
             </div>
 
@@ -104,7 +169,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 }
                 placeholder="Nome dell'autore"
                 disabled={isLoading}
-                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
+                className="bg-background border-secondary/40 text-foreground"
               />
             </div>
           </div>
@@ -120,9 +185,8 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 onChange={(e) =>
                   setFormData({ ...formData, yearRead: parseInt(e.target.value) })
                 }
-                placeholder="Anno"
                 disabled={isLoading}
-                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
+                className="bg-background border-secondary/40 text-foreground"
               />
             </div>
 
@@ -135,9 +199,9 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
                 }
-                placeholder="Categoria"
+                placeholder="Esempio: Leadership"
                 disabled={isLoading}
-                className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
+                className="bg-background border-secondary/40 text-foreground"
               />
             </div>
           </div>
@@ -154,7 +218,7 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
               placeholder="Una breve recensione del libro"
               disabled={isLoading}
               rows={2}
-              className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
+              className="bg-background border-secondary/40 text-foreground"
             />
           </div>
 
@@ -167,10 +231,10 @@ export default function AddBookModal({ onClose, onBookAdded }: AddBookModalProps
               onChange={(e) =>
                 setFormData({ ...formData, synopsis: e.target.value })
               }
-              placeholder="Descrizione completa del libro"
+              placeholder="Descrizione completa"
               disabled={isLoading}
               rows={3}
-              className="bg-background border-secondary/40 text-foreground placeholder-secondary/60"
+              className="bg-background border-secondary/40 text-foreground"
             />
           </div>
 
