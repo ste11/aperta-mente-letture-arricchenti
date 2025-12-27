@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AlertCircle, Upload, X, ImageIcon } from 'lucide-react';
 import { Alert } from '@/components/ui/alert';
+import { Image } from '@/components/ui/image';
 
 interface EditBookModalProps {
   book: Books;
@@ -77,7 +78,7 @@ export default function EditBookModal({ book, onClose, onBookUpdated }: EditBook
             <div className="relative aspect-[2/3] w-full bg-[#0f172a] rounded-lg border-2 border-dashed border-white/10 flex flex-col items-center justify-center overflow-hidden group">
               {formData.coverImage ? (
                 <>
-                  <img src={formData.coverImage} className="w-full h-full object-cover" alt="Cover" />
+                  <Image src={formData.coverImage} className="w-full h-full object-cover" alt="Cover" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                     <Button type="button" variant="destructive" size="sm" onClick={() => setFormData({...formData, coverImage: ''})}>
                       <X className="w-4 h-4 mr-2" /> Rimuovi

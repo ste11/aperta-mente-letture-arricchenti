@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Image } from '@/components/ui/image';
-import { ArrowRight, Sparkles, TrendingUp, Star, Compass, Brain, Lightbulb, Quote } from 'lucide-react';
+import { ArrowRight, Sparkles, TrendingUp, Star, Compass, Brain, Lightbulb, Quote, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -141,7 +141,7 @@ export default function HomePage() {
                             {/* Copertina */}
                             <div className="w-full md:w-2/5 h-48 md:h-auto relative overflow-hidden bg-black/20">
                                 {book.coverImage ? (
-                                    <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                    <Image src={book.coverImage} alt={book.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-white/20"><BookOpen className="w-12 h-12" /></div>
                                 )}

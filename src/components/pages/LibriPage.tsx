@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Image } from '@/components/ui/image';
+import { Button } from '@/components/ui/button';
 import { BaseCrudService } from '@/integrations';
 import { Books, ThematicCategories } from '@/entities';
 import { Star, Filter, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
@@ -117,7 +118,7 @@ export default function LibriPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                   <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-2xl">
                     {mustReadBooks[currentMustReadIndex].coverImage ? (
-                      <img src={mustReadBooks[currentMustReadIndex].coverImage} className="w-full h-full object-cover" />
+                      <Image src={mustReadBooks[currentMustReadIndex].coverImage} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-secondary flex items-center justify-center"><BookOpen /></div>
                     )}
@@ -190,7 +191,7 @@ export default function LibriPage() {
               <Link key={book._id} to={`/libro/${book._id}`} className="group bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-light-blue/50 transition-all">
                 <div className="aspect-[3/4] overflow-hidden bg-secondary relative">
                   {book.coverImage ? (
-                    <img src={book.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <Image src={book.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-4xl">?</div>
                   )}

@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Trash2, Edit2, ChevronDown, ChevronUp, Upload, X, ImageIcon } from 'lucide-react';
+import { Image } from '@/components/ui/image';
 
 interface BooksManagementTableProps {
   books: Books[];
@@ -131,7 +132,7 @@ export default function BooksManagementTable({
                 </div>
                 {expandedBookId === book._id && (
                   <div className="mt-4 pt-4 border-t border-secondary/20 space-y-2">
-                    {book.coverImage && <img src={book.coverImage} alt="Cover" className="h-32 w-24 object-cover rounded mb-2 border border-secondary/20" />}
+                    {book.coverImage && <Image src={book.coverImage} alt="Cover" className="h-32 w-24 object-cover rounded mb-2 border border-secondary/20" />}
                     {book.category && <p className="text-sm"><span className="font-bold text-secondary">Categoria:</span> {book.category}</p>}
                     {book.microReview && <p className="text-sm"><span className="font-bold text-secondary">Recensione:</span> {book.microReview}</p>}
                     {book.personalNotes && <p className="text-sm"><span className="font-bold text-secondary">Note Personali:</span> {book.personalNotes}</p>}
@@ -159,7 +160,7 @@ export default function BooksManagementTable({
                   <div className="relative h-40 w-28 bg-black/40 rounded border border-white/10 overflow-hidden">
                     {editingBook.coverImage ? (
                       <>
-                        <img src={editingBook.coverImage} className="w-full h-full object-cover" alt="Preview" />
+                        <Image src={editingBook.coverImage} className="w-full h-full object-cover" alt="Preview" />
                         <button onClick={() => setEditingBook({...editingBook, coverImage: ''})} className="absolute top-1 right-1 bg-red-600 p-1 rounded-full"><X className="w-3 h-3 text-white" /></button>
                       </>
                     ) : (
